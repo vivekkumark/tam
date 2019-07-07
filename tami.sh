@@ -174,6 +174,7 @@ function h_disk() {
 
 function h_hw() {
 	cat<<EOF
+#1
 lshw -h
 	lshw -businfo
 	lshw -xml | grep class | awk -F"class=" '{print $2}' | awk '{print $1}' | sort | uniq
@@ -191,6 +192,7 @@ lshw -h
 		"volume"
 	lshw -c memory
 
+#2
 dmidecode -t < Enter
 	bios
 	system
@@ -202,16 +204,67 @@ dmidecode -t < Enter
 	connector
 	slot
 
+#3
 apt-get update; apt-get install hwloc
 lstopo
 lstopo --output-format txt
 EOF
 }
 
-function h_dpkg() {
-	cat<<-EOF
-		dpkg -l
+function h_py2deb() {
+	cat<<-'EOF'
+		https://github.com/paylogic/py2deb
+
+		apt-get install python-pip          | apt-cache search pip
+
+		apt-get install dpkg-dev fakeroot
+		apt-get install lintian
+
+		pip install py2deb                  | on venv - if you want
+		pydeb <python_pkg>
 	EOF
+}
+
+function h_dpkg() {
+	cat<<-'EOF'
+		cat /etc/apt/sources.list
+		ls  /etc/apt/sources.list.d/
+
+		apt-get update
+		apt-get install ${PKG}
+		apt-get -f install
+		apt-get install -f python-pytest-cov | fix deps
+		apt-get download initramfs-tools
+		apt-get install --reinstall dpkg     | reinstall to fix man pages for example
+
+		apt-cache search <pkg_pattern>
+		apt-cache show makedumpfile
+		apt-cache showpkg makedumpfile (Dependencies and Reverse Dependencies)
+		apt-cache policy makedumpfile (Installed and available pkgs to be installed)
+
+		dpkg --help
+		dpkg -c /root/initramfs-tools_0.122ubuntu8.14_all.deb
+		dpkg -L <pkg>               | List files 'owned' by package
+		dpkg -S <file_pat_in_pkg>   | Find package(s) owning file(s)
+		dpkg -l <pattern>           | dpkg -l pn-*
+		dpkg -s <pkgs>
+
+		dpkg-query --help | man dpkg-query | a tool to query the dpkg database
+		dpkg-query -W -f '${Package;-25} ${Version;-30} ${Maintainer}\n' <pkg_list|pattern>
+		dpkg-query -W -f '${Package;-25} ${Version;-30} ${Maintainer;-50} ${XB-Branch}\n' pn-*
+
+		dpkg-deb --help              | .deb manipulation tool
+		dpkg-deb -c <.deb>
+		dpkg-deb -x <.deb>           | only files not control files
+		dpkg-deb -I <.deb>
+		dpkg-deb -R original.deb tmp | extract deb file
+		dpkg-deb -b tmp fixed.deb    | after patching create deb file
+
+		h_py2deb                     | converts Python source distributions to Debian binary packages
+	EOF
+}
+function h_apt() {
+	h_dpkg
 }
 
 function h_ssh() {
