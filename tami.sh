@@ -4,6 +4,10 @@
 # tami - tam shell init script file
 # handy bash/shell init scripts for quick reference
 #
+# cat<<'EOF' - use single quote to avoid variable substitution
+# cat<<-     - to ignore leading tabs
+#
+
 HLINE="-----------------------------------------------------------------------"
 
 PS1="\[\e[1;32m\]\u\[\e[m\]@\[\e[1;31m\]\h\[\e[m\]:\[\e[1;33m\]\w\[\e[m\]:\[\e[1;36m\](exit=$?)\[\e[m\]\n\[\e[2;32m\]$\[\e[m\] "
@@ -21,19 +25,19 @@ function javae() {
 	fi
 }
 
-# multiline cat 'EOF' <- use single quote to avoid variable substitution
 function h_tami() {
 	cat<<-EOF
-	TAMI functions
+		TAMI functions
 
-	${HLINE}
-	#MAC# javae - add java security exception to access applet web application
-	${HLINE}
-	type javae
-	Ex:
-	javae host <- to add a host
-	javae      <- to list
+		1. javae [host]
 
+		${HLINE}
+		#MAC# javae - add java security exception to access applet web application
+		${HLINE}
+		type javae
+		Ex:
+		javae host <- to add a host
+		javae      <- to list
 	EOF
 }
 function h_dtrace() {
@@ -104,23 +108,14 @@ function h_tcpdump() {
 }
 function h_gdb(){
 	cat<<-EOF
-		${HLINE}
+		set pagination off
+		set print pretty on
+		set print thread-events off | How can I disable new thread/thread exited messages in gdb?
+
 		make aware static function
 		${HLINE}
 		+CFLAGS         += -fno-inline-small-functions <- make aware static function
 
-		${HLINE}
-		Some cool formatting
-		${HLINE}
-		set pagination off
-		set print pretty on
-
-		${HLINE}
-		How can I disable new thread/thread exited messages in gdb?
-		${HLINE}
-		set print thread-events off
-
-		${HLINE}
 		Print/Run something when break point is hit
 		${HLINE}
 		break foo if x>0
@@ -130,7 +125,6 @@ function h_gdb(){
 		cont
 		end
 
-		${HLINE}
 		Save and load break points
 		${HLINE}
 		save breakpoints /tmp/bp.txt
@@ -138,7 +132,89 @@ function h_gdb(){
 	EOF
 }
 
-function h_ssh(){
+function h_proc() {
+	cat<<-EOF
+		ps
+		top
+		htop
+	EOF
+}
+
+function h_cpu() {
+	cat<<-EOF
+		htop
+		cat /proc/cpuinfo
+		lscpu
+	EOF
+}
+
+function h_memory() {
+	cat<<-EOF
+		free -h
+		cat /proc/meminfo
+	EOF
+}
+
+function h_disk() {
+	cat<<-EOF
+		df -h
+		parted -l
+		lsblk
+		cat /etc/fstab
+		lshw -c storage
+		lshw -c volume
+
+		btrfs
+		-------
+		btrfs fi <- Enter
+		btrfs fi show
+		btrfs filesystem usage /
+	EOF
+}
+
+function h_hw() {
+	cat<<EOF
+lshw -h
+	lshw -businfo
+	lshw -xml | grep class | awk -F"class=" '{print $2}' | awk '{print $1}' | sort | uniq
+		"bridge"
+		"bus"
+		"communication"
+		"disk"
+		"display"
+		"input"
+		"memory"
+		"network"
+		"processor"
+		"storage"
+		"system"
+		"volume"
+	lshw -c memory
+
+dmidecode -t < Enter
+	bios
+	system
+	baseboard
+	chassis
+	processor
+	memory
+	cache
+	connector
+	slot
+
+apt-get update; apt-get install hwloc
+lstopo
+lstopo --output-format txt
+EOF
+}
+
+function h_dpkg() {
+	cat<<-EOF
+		dpkg -l
+	EOF
+}
+
+function h_ssh() {
 	cat<<-EOF
 		ssh-add -k
 		ssh-add -L
