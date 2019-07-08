@@ -137,15 +137,34 @@ function h_proc() {
 		ps
 		top
 		htop
+		cat /proc/cpuinfo
+		lscpu
+
+		#1 ps
+		ps aux
+		ps -elf
+		man ps      | section - STANDARD FORMAT SPECIFIERS
+		ps L        | to list all format specifiers
+		  some more format codes:
+		    %cpu,%mem,lstart,etime,etimes,nlwp,psr,rss,sz
+		  export PS_FORMAT=f,pid,ppid,nlwp,lstart,etime,etimes,comm,cmd
+		ps -o comm  | just exe name
+		ps -o cmd   | full command including arguments
+
+		ps -e --sort=-%mem -o pid,%cpu,%mem,etime,comm,cmd  | head -n 10
+		watch -n 1 'ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head'
+
+		ps --forest
+		ps -f --forest | -F extra full format
 	EOF
 }
 
 function h_cpu() {
-	cat<<-EOF
-		htop
-		cat /proc/cpuinfo
-		lscpu
-	EOF
+	h_proc
+}
+
+function h_ps() {
+	h_proc
 }
 
 function h_memory() {
@@ -208,6 +227,9 @@ dmidecode -t < Enter
 apt-get update; apt-get install hwloc
 lstopo
 lstopo --output-format txt
+
+#4
+lspci
 EOF
 }
 

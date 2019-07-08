@@ -8,7 +8,7 @@ This remote machine is not a dev machine that you will login every day, hence se
 shortcuts via shell source file is not done yet as you might be logging in for the first time!
 
 Now, imagine for debugging issues you might want to ssh random hosts and need quick help
-without switching to a another wondow, how handy would that be?
+without switching to a another window, how handy would that be?
 
 TAM is aimed to solve the problem of setting up your own custom shell environment
 upon ssh!
